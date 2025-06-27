@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brokerage Account - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .chase-blue {
+            background-color: #0d47a1;
+        }
+        .tab-active {
+            border-bottom-color: #0d47a1;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+        .options-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .options-menu.open {
+            max-height: 500px; /* Large enough to fit content */
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Login Page -->
+    <div id="login-page" class="flex items-center justify-center min-h-screen bg-gray-200">
+        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-lg">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900">Qulay Invest</h1>
+                <p class="mt-2 text-sm text-gray-600">Sign in to your account</p>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <input type="hidden" name="remember" value="true">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <label for="username" class="sr-only">Username</label>
+                        <input id="username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Username">
+                    </div>
+                    <div>
+                        <label for="password" class="sr-only">Password</label>
+                        <input id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Password">
+                    </div>
+                </div>
+                
+                <p id="login-error" class="text-red-500 text-sm text-center hidden">Invalid username or password.</p>
+
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                </div>
+            </div>
+            <div>
+                <button id="face-id-button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                   <svg class="w-5 h-5 mr-2 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                    </svg>
+                    Sign in with Face ID
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main Trading App (Initially hidden) -->
+    <div id="main-app" class="hidden">
+        <!-- Header -->
+        
+<div class="bg-gray-900 text-white text-sm py-2 text-center">
+    <span>UTC Time: <span id="utc-time" class="font-mono"></span></span>
+</div>
+
+<header class="chase-blue text-white shadow-md">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <h1 class="text-xl sm:text-2xl font-bold">Multi-Stock Trading</h1>
+                    <div class="text-sm font-medium">Brokerage Account: ******789</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Left Column: Accounts & Actions -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- Accounts Summary -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Accounts Summary</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold text-gray-600">Brokerage Account</h3>
+                                <p class="text-2xl font-bold text-gray-900" id="brokerage-cash-balance-usd">$0.00</p>
+                                <p class="text-sm text-gray-500">Cash Balance (USD)</p>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" id="brokerage-cash-balance-uzs">0 UZS</p>
+                                <p class="text-sm text-gray-500">Cash Balance (UZS)</p>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" id="brokerage-investment-balance">$0.00</p>
+                                <p class="text-sm text-gray-500">Total Investments (USD)</p>
+                            </div>
+                            <div class="pt-4 border-t">
+                                <h3 class="font-semibold text-gray-600">Bank Account</h3>
+                                <p class="text-2xl font-bold text-gray-900" id="bank-balance">$0.00</p>
+                                <p class="text-sm text-gray-500">Total Checking</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Actions</h2>
+                        <div class="space-y-4 mb-6">
+                             <h3 class="font-semibold text-gray-600">Transfer Funds</h3>
+                            <div>
+                                <label for="transfer-amount" class="block text-sm font-medium text-gray-700">Amount (USD)</label>
+                                <div class="mt-1 relative rounded-md shadow-sm"><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="text-gray-500 sm:text-sm">$</span></div><input type="number" id="transfer-amount" class="block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00"></div>
+                            </div>
+                            <button id="transfer-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Transfer to Brokerage</button>
+                        </div>
+
+                        <div class="space-y-4 pt-6 border-t">
+                             <h3 class="font-semibold text-gray-600">Currency Converter</h3>
+                             <div><label for="convert-amount" class="block text-sm font-medium text-gray-700">Amount</label><input type="number" id="convert-amount" class="mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="0.00"></div>
+                            <div class="flex items-center space-x-2"><select id="convert-from" class="w-full rounded-md border-gray-300"><option value="USD">USD</option><option value="UZS">UZS</option></select><span class="font-bold text-gray-600">to</span><select id="convert-to" class="w-full rounded-md border-gray-300"><option value="UZS">UZS</option><option value="USD">USD</option></select></div>
+                             <p class="text-sm text-gray-500 text-center">Rate: 1 USD = 12,650 UZS</p>
+                             <button id="convert-button" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Convert</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                         <h2 class="text-xl font-bold text-gray-800 mb-4">Tools & Options</h2>
+                         <div class="space-y-3">
+                            <button id="explore-investments-btn" class="w-full text-left font-medium text-blue-600 hover:text-blue-800">Explore Investments</button>
+                            <button id="more-options-toggle" class="w-full text-left font-medium text-blue-600 hover:text-blue-800 flex justify-between items-center">
+                                <span>More Options</span>
+                                <svg class="w-5 h-5 transition-transform" id="more-options-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div id="more-options-menu" class="options-menu pl-4 border-l-2 border-gray-200">
+                                <ul class="space-y-2 pt-2">
+                                    <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Positions</a></li>
+                                    <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Performance</a></li>
+                                    <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Balances</a></li>
+                                    <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Transactions</a></li>
+                                    <li><a href="#" class="lessons.html">Financial Lessons</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Stock Info & Trading -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="border-b border-gray-200 mb-4">
+                            <nav class="-mb-px flex space-x-6" id="stock-tabs">
+                                <button data-ticker="UMAR.CHERT" class="stock-tab py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active">UMAR.CHERT (USD)</button>
+                                <button data-ticker="SHML.CHERT" class="stock-tab py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">SHML.CHERT (UZS)</button>
+                            </nav>
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div><h2 class="text-2xl font-bold text-gray-900" id="stock-ticker"></h2><p class="text-sm text-gray-500" id="stock-name"></p></div>
+                            <div class="text-right"><p class="text-3xl font-bold text-gray-900" id="stock-price"></p><p class="text-lg font-semibold" id="stock-change"></p></div>
+                        </div>
+                        <div class="h-64 md:h-80"><canvas id="stockChart"></canvas></div>
+                        <div class="mt-6 pt-4 border-t">
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Key Statistics & Reports</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                                <div><span class="text-gray-500">Market Cap:</span><br><strong class="text-gray-900">$25.8B</strong></div>
+                                <div><span class="text-gray-500">P/E Ratio:</span><br><strong class="text-gray-900">31.4</strong></div>
+                                <div><span class="text-gray-500">Div Yield:</span><br><strong class="text-gray-900">1.25%</strong></div>
+                                <div><span class="text-gray-500">52-Wk High:</span><br><strong class="text-gray-900" id="stat-high"></strong></div>
+                                <div><span class="text-gray-500">52-Wk Low:</span><br><strong class="text-gray-900" id="stat-low"></strong></div>
+                                <div><span class="text-gray-500">Analyst Report:</span><br><a href="https://docs.google.com/document/d/1O49dOCDayXIivLrumPdwNyN0xp_HR1pQBgaREkMK7AA/edit?tab=t.0#heading=h.ey46uzu2zf25" target="_blank" class="font-bold text-blue-600 hover:underline">View Report</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="text-xl font-bold text-green-600 mb-4" id="buy-header"></h3><div class="space-y-4"><div><label for="buy-quantity" class="block text-sm font-medium text-gray-700">Quantity</label><input type="number" id="buy-quantity" class="mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="0"></div><p class="text-sm text-gray-500">Cost: <span id="buy-cost" class="font-semibold"></span></p><button id="buy-button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Buy</button></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="text-xl font-bold text-red-600 mb-4" id="sell-header"></h3><div class="space-y-4"><div><label for="sell-quantity" class="block text-sm font-medium text-gray-700">Quantity</label><input type="number" id="sell-quantity" class="mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="0"></div><p class="text-sm text-gray-500">Owned: <span id="shares-owned" class="font-semibold"></span></p><p class="text-sm text-gray-500">Credit: <span id="sell-credit" class="font-semibold"></span></p><button id="sell-button" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Sell</button></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Message Modal -->
+    <div id="message-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="message-title"></h3>
+                <div class="mt-2 px-7 py-3"><p class="text-sm text-gray-500" id="message-body"></p></div>
+                <div class="items-center px-4 py-3"><button id="close-modal-button" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- UI & STATE ELEMENTS ---
+            const loginPage = document.getElementById('login-page');
+            const mainApp = document.getElementById('main-app');
+            const loginForm = document.getElementById('login-form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginError = document.getElementById('login-error');
+            const faceIdButton = document.getElementById('face-id-button');
+            const modal = document.getElementById('message-modal');
+            const modalTitle = document.getElementById('message-title');
+            const modalBody = document.getElementById('message-body');
+            const closeModalButton = document.getElementById('close-modal-button');
+            
+            // --- MODAL & LOGIN LOGIC ---
+            function showMessage(title, body) {
+                modalTitle.textContent = title;
+                modalBody.textContent = body;
+                modal.classList.remove('hidden');
+            }
+
+            closeModalButton.addEventListener('click', () => modal.classList.add('hidden'));
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+
+                if (username === 'qulay_invest_test' && password === 'Q_I_test_12#$$') {
+                    loginPage.classList.add('hidden');
+                    mainApp.classList.remove('hidden');
+                    initializeTradingApp(); // Start the main app logic
+                } else {
+                    loginError.classList.remove('hidden');
+                }
+            });
+
+            faceIdButton.addEventListener('click', () => {
+                showMessage('Feature Coming Soon', 'Face ID sign-in will be available soon on mobile devices.');
+            });
+
+            // --- TRADING APP LOGIC (WRAPPED IN A FUNCTION) ---
+            function initializeTradingApp() {
+                // --- CONFIG & STATE ---
+                const exchangeRateUSD_UZS = 12650;
+                let accounts = { bank: { balance: 100000 }, brokerage: { cash_usd: 25000, cash_uzs: 5000000 } };
+                let stocks = {
+                    'UMAR.CHERT': { name: 'Umar Chert Dynamics Inc.', history: [], currentPrice: 150.00, openingPrice: 150.00, currency: 'USD', shares: 150, volatility: 2, stat_high: 175.34, stat_low: 121.09 },
+                    'SHML.CHERT': { name: 'Shamil Chert Industries', history: [], currentPrice: 55000.00, openingPrice: 55000.00, currency: 'UZS', shares: 5000, volatility: 200, stat_high: 68450.00, stat_low: 43200.00 }
+                };
+                let activeTicker = 'UMAR.CHERT';
+                let stockChart;
+
+                // --- UI ELEMENTS ---
+                const brokerageCashUsdEl = document.getElementById('brokerage-cash-balance-usd');
+                const brokerageCashUzsEl = document.getElementById('brokerage-cash-balance-uzs');
+                const brokerageInvestmentBalanceEl = document.getElementById('brokerage-investment-balance');
+                const bankBalanceEl = document.getElementById('bank-balance');
+                const stockTabs = document.getElementById('stock-tabs');
+                const stockTickerEl = document.getElementById('stock-ticker');
+                const stockNameEl = document.getElementById('stock-name');
+                const stockPriceEl = document.getElementById('stock-price');
+                const stockChangeEl = document.getElementById('stock-change');
+                const statHighEl = document.getElementById('stat-high');
+                const statLowEl = document.getElementById('stat-low');
+                const transferAmountInput = document.getElementById('transfer-amount');
+                const transferButton = document.getElementById('transfer-button');
+                const convertAmountInput = document.getElementById('convert-amount');
+                const convertFromSelect = document.getElementById('convert-from');
+                const convertToSelect = document.getElementById('convert-to');
+                const convertButton = document.getElementById('convert-button');
+                const buyHeader = document.getElementById('buy-header');
+                const sellHeader = document.getElementById('sell-header');
+                const buyQuantityInput = document.getElementById('buy-quantity');
+                const buyCostEl = document.getElementById('buy-cost');
+                const buyButton = document.getElementById('buy-button');
+                const sellQuantityInput = document.getElementById('sell-quantity');
+                const sharesOwnedEl = document.getElementById('shares-owned');
+                const sellCreditEl = document.getElementById('sell-credit');
+                const sellButton = document.getElementById('sell-button');
+                const moreOptionsToggle = document.getElementById('more-options-toggle');
+                const moreOptionsArrow = document.getElementById('more-options-arrow');
+                const moreOptionsMenu = document.getElementById('more-options-menu');
+                const exploreInvestmentsBtn = document.getElementById('explore-investments-btn');
+
+                // --- HELPER FUNCTIONS ---
+                const formatCurrency = (value, currency = 'USD') => {
+                    const options = { style: 'currency', currency };
+                    if (currency === 'UZS') { options.minimumFractionDigits = 0; options.maximumFractionDigits = 0; }
+                    return new Intl.NumberFormat(currency === 'UZS' ? 'uz-UZ' : 'en-US', options).format(value);
+                };
+
+                // --- DATA & CHART LOGIC ---
+                function generateInitialHistory(stock) {
+                    let price = stock.openingPrice;
+                    stock.history = []; // Clear any previous data
+                    const now = new Date();
+                    for (let i = 100; i > 0; i--) {
+                        stock.history.push({ x: new Date(now.getTime() - i * 60000).getTime(), y: price });
+                        price += (Math.random() - 0.49) * stock.volatility;
+                        if (price < 1) price = 1;
+                    }
+                    stock.currentPrice = price;
+                }
+
+                function initializeChart() {
+                    const ctx = document.getElementById('stockChart').getContext('2d');
+                    if (stockChart) stockChart.destroy();
+                    const activeStock = stocks[activeTicker];
+                    stockChart = new Chart(ctx, {
+                        type: 'line',
+                        data: { datasets: [{
+                            label: `${activeTicker} Price`, data: activeStock.history, borderColor: '#0d47a1',
+                            backgroundColor: 'rgba(13, 71, 161, 0.1)', borderWidth: 2, pointRadius: 0, tension: 0.1, fill: true,
+                        }] },
+                        options: { responsive: true, maintainAspectRatio: false,
+                            scales: { x: { type: 'time', time: { unit: 'minute' }, grid: { display: false } },
+                                y: { beginAtZero: false, grid: { color: '#e5e7eb' }, ticks: { callback: (value) => formatCurrency(value, activeStock.currency) } }
+                            },
+                            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => formatCurrency(context.parsed.y, activeStock.currency) } } }
+                        }
+                    });
+                }
+
+                function updateAllStockPrices() {
+                    Object.values(stocks).forEach(stock => {
+                        const change = (Math.random() - 0.5) * (stock.volatility / 4);
+                        stock.currentPrice += change;
+                        if (stock.currentPrice < 1) stock.currentPrice = 1;
+                        const newData = { x: new Date().getTime(), y: stock.currentPrice };
+                        stock.history.push(newData);
+                        if (stock.history.length > 200) stock.history.shift();
+                    });
+                    updateActiveStockView(); 
+                    updateAccountsUI();
+                }
+
+                // --- UI UPDATE FUNCTIONS ---
+                function updateAccountsUI() {
+                    bankBalanceEl.textContent = formatCurrency(accounts.bank.balance, 'USD');
+                    brokerageCashUsdEl.textContent = formatCurrency(accounts.brokerage.cash_usd, 'USD');
+                    brokerageCashUzsEl.textContent = formatCurrency(accounts.brokerage.cash_uzs, 'UZS');
+                    let totalInvestmentValue = Object.values(stocks).reduce((total, stock) => {
+                        let valueInUSD = stock.shares * stock.currentPrice;
+                        if (stock.currency === 'UZS') valueInUSD /= exchangeRateUSD_UZS;
+                        return total + valueInUSD;
+                    }, 0);
+                    brokerageInvestmentBalanceEl.textContent = formatCurrency(totalInvestmentValue, 'USD');
+                }
+
+                function updateActiveStockView() {
+                    const stock = stocks[activeTicker];
+                    stockTickerEl.textContent = activeTicker;
+                    stockNameEl.textContent = stock.name;
+                    stockPriceEl.textContent = formatCurrency(stock.currentPrice, stock.currency);
+                    const change = stock.currentPrice - stock.openingPrice;
+                    const percentChange = (change / stock.openingPrice) * 100;
+                    stockChangeEl.textContent = `${change >= 0 ? '+' : ''}${formatCurrency(change, stock.currency)} (${percentChange.toFixed(2)}%)`;
+                    stockChangeEl.style.color = change >= 0 ? '#16a34a' : '#dc2626';
+                    statHighEl.textContent = formatCurrency(stock.stat_high, stock.currency);
+                    statLowEl.textContent = formatCurrency(stock.stat_low, stock.currency);
+                    buyHeader.textContent = `Buy ${activeTicker}`;
+                    sellHeader.textContent = `Sell ${activeTicker}`;
+                    sharesOwnedEl.textContent = stock.shares.toLocaleString();
+                    updateBuyCost();
+                    updateSellCredit();
+                    if (stockChart) {
+                        stockChart.data.datasets[0].data = stock.history;
+                        stockChart.update('quiet');
+                    }
+                }
+                
+                function updateBuyCost() {
+                    const quantity = parseFloat(buyQuantityInput.value) || 0;
+                    const cost = quantity * stocks[activeTicker].currentPrice;
+                    buyCostEl.textContent = formatCurrency(cost, stocks[activeTicker].currency);
+                }
+
+                function updateSellCredit() {
+                    const quantity = parseFloat(sellQuantityInput.value) || 0;
+                    const credit = quantity * stocks[activeTicker].currentPrice;
+                    sellCreditEl.textContent = formatCurrency(credit, stocks[activeTicker].currency);
+                }
+                
+                // --- EVENT HANDLERS ---
+                stockTabs.addEventListener('click', (e) => {
+                    if (e.target.matches('.stock-tab')) {
+                        activeTicker = e.target.dataset.ticker;
+                        document.querySelectorAll('.stock-tab').forEach(tab => tab.classList.remove('tab-active'));
+                        e.target.classList.add('tab-active');
+                        initializeChart();
+                        updateActiveStockView();
+                    }
+                });
+                
+                buyButton.addEventListener('click', () => {
+                    const quantity = parseInt(buyQuantityInput.value);
+                    const stock = stocks[activeTicker];
+                    if (isNaN(quantity) || quantity <= 0) return showMessage('Invalid Quantity', 'Please enter a positive whole number.');
+                    const cost = quantity * stock.currentPrice;
+                    if (stock.currency === 'USD') {
+                        if (cost > accounts.brokerage.cash_usd) return showMessage('Insufficient Funds', 'Insufficient USD cash.');
+                        accounts.brokerage.cash_usd -= cost;
+                    } else {
+                        if (cost > accounts.brokerage.cash_uzs) return showMessage('Insufficient Funds', 'Insufficient UZS cash.');
+                        accounts.brokerage.cash_uzs -= cost;
+                    }
+                    stock.shares += quantity;
+                    updateAccountsUI(); updateActiveStockView(); buyQuantityInput.value = '';
+                    showMessage('Purchase Complete', `You bought ${quantity} shares of ${activeTicker}.`);
+                });
+
+                sellButton.addEventListener('click', () => {
+                    const quantity = parseInt(sellQuantityInput.value);
+                    const stock = stocks[activeTicker];
+                    if (isNaN(quantity) || quantity <= 0) return showMessage('Invalid Quantity', 'Please enter a positive whole number.');
+                    if (quantity > stock.shares) return showMessage('Insufficient Shares', 'You do not own enough shares.');
+                    const credit = quantity * stock.currentPrice;
+                    stock.shares -= quantity;
+                    if (stock.currency === 'USD') accounts.brokerage.cash_usd += credit;
+                    else accounts.brokerage.cash_uzs += credit;
+                    updateAccountsUI(); updateActiveStockView(); sellQuantityInput.value = '';
+                    showMessage('Sale Complete', `You sold ${quantity} shares of ${activeTicker}.`);
+                });
+                
+                transferButton.addEventListener('click', () => {
+                    const amount = parseFloat(transferAmountInput.value);
+                    if (isNaN(amount) || amount <= 0) return showMessage('Invalid Amount', 'Please enter a positive USD amount.');
+                    if (amount > accounts.bank.balance) return showMessage('Insufficient Funds', 'Insufficient funds in bank account.');
+                    accounts.bank.balance -= amount;
+                    accounts.brokerage.cash_usd += amount;
+                    updateAccountsUI(); transferAmountInput.value = '';
+                    showMessage('Success', `${formatCurrency(amount)} transferred to brokerage.`);
+                });
+                
+                convertButton.addEventListener('click', () => {
+                    const amount = parseFloat(convertAmountInput.value);
+                    const from = convertFromSelect.value;
+                    const to = convertToSelect.value;
+                    if (isNaN(amount) || amount <= 0) return showMessage('Invalid Amount', 'Please enter a positive amount.');
+                    if (from === to) return showMessage('Invalid Conversion', 'Cannot convert to the same currency.');
+                    if (from === 'USD') {
+                        if (amount > accounts.brokerage.cash_usd) return showMessage('Insufficient Funds', 'Insufficient USD.');
+                        accounts.brokerage.cash_usd -= amount;
+                        accounts.brokerage.cash_uzs += amount * exchangeRateUSD_UZS;
+                        showMessage('Success', `Converted ${formatCurrency(amount, 'USD')} to ${formatCurrency(amount * exchangeRateUSD_UZS, 'UZS')}.`);
+                    } else {
+                        if (amount > accounts.brokerage.cash_uzs) return showMessage('Insufficient Funds', 'Insufficient UZS.');
+                        accounts.brokerage.cash_uzs -= amount;
+                        accounts.brokerage.cash_usd += amount / exchangeRateUSD_UZS;
+                        showMessage('Success', `Converted ${formatCurrency(amount, 'UZS')} to ${formatCurrency(amount / exchangeRateUSD_UZS, 'USD')}.`);
+                    }
+                    updateAccountsUI(); convertAmountInput.value = '';
+                });
+
+                moreOptionsToggle.addEventListener('click', () => {
+                    moreOptionsMenu.classList.toggle('open');
+                    moreOptionsArrow.classList.toggle('rotate-180');
+                });
+                
+                const showComingSoon = (e) => {
+                    e.preventDefault();
+                    showMessage('Feature Not Available', 'This feature is currently under development.');
+                };
+
+                document.querySelectorAll('.non-functional-link').forEach(link => link.addEventListener('click', showComingSoon));
+                exploreInvestmentsBtn.addEventListener('click', showComingSoon);
+                
+                buyQuantityInput.addEventListener('input', updateBuyCost);
+                sellQuantityInput.addEventListener('input', updateSellCredit);
+                
+                // --- INITIALIZATION ---
+                Object.values(stocks).forEach(generateInitialHistory);
+                initializeChart();
+                updateAccountsUI();
+                updateActiveStockView();
+                setInterval(updateAllStockPrices, 2000);
+            }
+        });
+    </script>
+
+<script>
+  function updateUTCTime() {
+    const now = new Date();
+    document.getElementById('utc-time').textContent = now.toUTCString();
+  }
+  setInterval(updateUTCTime, 1000);
+  window.onload = updateUTCTime;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qulay Invest - Financial Lessons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .lesson-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .lock-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        .locked-card:hover .lock-overlay {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold text-gray-900">Qulay Invest</h1>
+            <p class="text-gray-600">Your Journey to Financial Freedom</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <h2 class="text-4xl font-bold text-center mb-4">Financial Lessons</h2>
+        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Start with our free introductory lesson. Unlock the full course to gain comprehensive financial knowledge and take control of your future.</p>
+
+        <!-- Lesson 0: Free Lesson -->
+        <div class="mb-16">
+            <h3 class="text-2xl font-semibold mb-6 text-center">Lesson 0: Introduction to Financial Literacy</h3>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
+                <div class="md:flex">
+                    <div class="md:w-1/2">
+                        <div class="aspect-w-16 aspect-h-9">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/aQuH4BosaVw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-8 flex flex-col justify-center">
+                        <img src="https://placehold.co/100x100/EBF4FF/333333?text=0&font=inter" alt="Lesson 0" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-200">
+                        <h4 class="font-bold text-xl mb-2 text-center">Start Your Journey Here</h4>
+                        <p class="text-gray-600 text-center">This complimentary lesson provides the fundamental concepts of financial planning. Watch the video to begin!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Locked Lessons -->
+        <div>
+            <h3 class="text-2xl font-semibold mb-8 text-center">Unlock the Full Course</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- Generating 12 locked lessons -->
+                <script>
+                    const lessonsContainer = document.querySelector('.grid');
+                    for (let i = 1; i <= 12; i++) {
+                        const lessonCard = `
+                            <div class="lesson-card locked-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer relative" onclick="showPurchaseModal()">
+                                <img src="https://placehold.co/400x300/E2E8F0/4A5568?text=${i}&font=inter" alt="Lesson ${i}" class="w-full h-48 object-cover">
+                                <div class="lock-overlay absolute inset-0 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                </div>
+                                <div class="p-5">
+                                    <h4 class="font-bold text-lg">Lesson ${i}</h4>
+                                    <p class="text-gray-600">Content Locked</p>
+                                </div>
+                            </div>
+                        `;
+                        lessonsContainer.innerHTML += lessonCard;
+                    }
+                </script>
+            </div>
+        </div>
+    </main>
+
+    <!-- Purchase Modal -->
+    <div id="purchaseModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center">
+            <h4 class="text-xl font-bold mb-4">Unlock This Lesson</h4>
+            <p class="text-gray-700 mb-6">To access this and all other lessons, you need to purchase the full Qulay Invest financial course.</p>
+            <button class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors" onclick="closePurchaseModal()">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-600">
+            &copy; 2024 Qulay Invest. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        const purchaseModal = document.getElementById('purchaseModal');
+
+        function showPurchaseModal() {
+            purchaseModal.classList.remove('hidden');
+        }
+
+        function closePurchaseModal() {
+            purchaseModal.classList.add('hidden');
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            if (event.target == purchaseModal) {
+                closePurchaseModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
