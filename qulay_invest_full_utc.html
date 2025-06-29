@@ -32,6 +32,15 @@
             max-height: 500px; /* Large enough to fit content */
             opacity: 1;
         }
+        #stock-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        #stock-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -89,14 +98,14 @@
     <div id="main-app" class="hidden">
         <!-- Header -->
         
-<div class="bg-gray-900 text-white text-sm py-2 text-center">
-    <span>UTC Time: <span id="utc-time" class="font-mono"></span></span>
-</div>
+        <div class="bg-gray-900 text-white text-sm py-2 text-center">
+            <span>UTC Time: <span id="utc-time" class="font-mono"></span></span>
+        </div>
 
-<header class="chase-blue text-white shadow-md">
+        <header class="chase-blue text-white shadow-md">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
-                    <h1 class="text-xl sm:text-2xl font-bold">Multi-Stock Trading</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold">Multi-Asset Trading</h1>
                     <div class="text-sm font-medium">Brokerage Account: ******789</div>
                 </div>
             </div>
@@ -164,7 +173,7 @@
                                     <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Performance</a></li>
                                     <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Balances</a></li>
                                     <li><a href="#" class="non-functional-link text-gray-600 hover:text-gray-900">Transactions</a></li>
-                                    <li><a href="#" class="lessons.html">Financial Lessons</a></li>
+                                    <li><a href="lessons.html">Financial Lessons</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -176,8 +185,11 @@
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <div class="border-b border-gray-200 mb-4">
                             <nav class="-mb-px flex space-x-6" id="stock-tabs">
-                                <button data-ticker="UMAR.CHERT" class="stock-tab py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active">UMAR.CHERT (USD)</button>
-                                <button data-ticker="SHML.CHERT" class="stock-tab py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">SHML.CHERT (UZS)</button>
+                                <button data-ticker="UMAR.CHERT" class="stock-tab flex-shrink-0 py-4 px-2 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active">UMAR.CHERT (USD)</button>
+                                <button data-ticker="SHML.CHERT" class="stock-tab flex-shrink-0 py-4 px-2 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">SHML.CHERT (UZS)</button>
+                                <button data-ticker="AAPL" class="stock-tab flex-shrink-0 py-4 px-2 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">AAPL (USD)</button>
+                                <button data-ticker="GOOGL" class="stock-tab flex-shrink-0 py-4 px-2 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">GOOGL (USD)</button>
+                                <button data-ticker="GOLD" class="stock-tab flex-shrink-0 py-4 px-2 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">GOLD (USD)</button>
                             </nav>
                         </div>
                         <div class="flex justify-between items-start mb-4">
@@ -188,9 +200,9 @@
                         <div class="mt-6 pt-4 border-t">
                             <h3 class="text-lg font-bold text-gray-800 mb-3">Key Statistics & Reports</h3>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-                                <div><span class="text-gray-500">Market Cap:</span><br><strong class="text-gray-900">$25.8B</strong></div>
-                                <div><span class="text-gray-500">P/E Ratio:</span><br><strong class="text-gray-900">31.4</strong></div>
-                                <div><span class="text-gray-500">Div Yield:</span><br><strong class="text-gray-900">1.25%</strong></div>
+                                <div><span class="text-gray-500">Market Cap:</span><br><strong class="text-gray-900" id="stat-mkt-cap"></strong></div>
+                                <div><span class="text-gray-500">P/E Ratio:</span><br><strong class="text-gray-900" id="stat-pe"></strong></div>
+                                <div><span class="text-gray-500">Div Yield:</span><br><strong class="text-gray-900" id="stat-div-yield"></strong></div>
                                 <div><span class="text-gray-500">52-Wk High:</span><br><strong class="text-gray-900" id="stat-high"></strong></div>
                                 <div><span class="text-gray-500">52-Wk Low:</span><br><strong class="text-gray-900" id="stat-low"></strong></div>
                                 <div><span class="text-gray-500">Analyst Report:</span><br><a href="https://docs.google.com/document/d/1O49dOCDayXIivLrumPdwNyN0xp_HR1pQBgaREkMK7AA/edit?tab=t.0#heading=h.ey46uzu2zf25" target="_blank" class="font-bold text-blue-600 hover:underline">View Report</a></div>
@@ -247,12 +259,12 @@
                 const username = usernameInput.value;
                 const password = passwordInput.value;
 
-                if (username === 'qulay_invest_test' && password === 'Q_I_test_12#$$') {
+                if (username === 'qulay_invest_test' && password === 'test') {
                     loginPage.classList.add('hidden');
                     mainApp.classList.remove('hidden');
                     initializeTradingApp(); // Start the main app logic
                 } else {
-                    loginError.classList.remove('hidden');
+                    loginError.classList.remove('hidden');s
                 }
             });
 
@@ -266,8 +278,11 @@
                 const exchangeRateUSD_UZS = 12650;
                 let accounts = { bank: { balance: 100000 }, brokerage: { cash_usd: 25000, cash_uzs: 5000000 } };
                 let stocks = {
-                    'UMAR.CHERT': { name: 'Umar Chert Dynamics Inc.', history: [], currentPrice: 150.00, openingPrice: 150.00, currency: 'USD', shares: 150, volatility: 2, stat_high: 175.34, stat_low: 121.09 },
-                    'SHML.CHERT': { name: 'Shamil Chert Industries', history: [], currentPrice: 55000.00, openingPrice: 55000.00, currency: 'UZS', shares: 5000, volatility: 200, stat_high: 68450.00, stat_low: 43200.00 }
+                    'UMAR.CHERT': { name: 'Umar Chert Dynamics Inc.', history: [], currentPrice: 150.00, openingPrice: 150.00, currency: 'USD', shares: 150, volatility: 2, stat_high: 175.34, stat_low: 121.09, mkt_cap: '$25.8B', pe: '31.4', div_yield: '1.25%' },
+                    'SHML.CHERT': { name: 'Shamil Chert Industries', history: [], currentPrice: 55000.00, openingPrice: 55000.00, currency: 'UZS', shares: 5000, volatility: 200, stat_high: 68450.00, stat_low: 43200.00, mkt_cap: '6.5T UZS', pe: '18.2', div_yield: '2.50%' },
+                    'AAPL': { name: 'Apple Inc.', history: [], currentPrice: 195.00, openingPrice: 195.00, currency: 'USD', shares: 0, volatility: 3, stat_high: 220.50, stat_low: 165.21, mkt_cap: '$3.0T', pe: '32.1', div_yield: '0.54%' },
+                    'GOOGL': { name: 'Alphabet Inc.', history: [], currentPrice: 180.00, openingPrice: 180.00, currency: 'USD', shares: 0, volatility: 2.5, stat_high: 190.10, stat_low: 135.88, mkt_cap: '$2.2T', pe: '27.5', div_yield: 'N/A' },
+                    'GOLD': { name: 'Gold Spot (XAU/USD)', history: [], currentPrice: 2320.50, openingPrice: 2320.50, currency: 'USD', shares: 0, volatility: 20, stat_high: 2450.00, stat_low: 1980.75, mkt_cap: '$15.8T', pe: 'N/A', div_yield: 'N/A' }
                 };
                 let activeTicker = 'UMAR.CHERT';
                 let stockChart;
@@ -284,6 +299,9 @@
                 const stockChangeEl = document.getElementById('stock-change');
                 const statHighEl = document.getElementById('stat-high');
                 const statLowEl = document.getElementById('stat-low');
+                const statMktCapEl = document.getElementById('stat-mkt-cap');
+                const statPeEl = document.getElementById('stat-pe');
+                const statDivYieldEl = document.getElementById('stat-div-yield');
                 const transferAmountInput = document.getElementById('transfer-amount');
                 const transferButton = document.getElementById('transfer-button');
                 const convertAmountInput = document.getElementById('convert-amount');
@@ -378,8 +396,14 @@
                     const percentChange = (change / stock.openingPrice) * 100;
                     stockChangeEl.textContent = `${change >= 0 ? '+' : ''}${formatCurrency(change, stock.currency)} (${percentChange.toFixed(2)}%)`;
                     stockChangeEl.style.color = change >= 0 ? '#16a34a' : '#dc2626';
+                    
+                    // Update stats
                     statHighEl.textContent = formatCurrency(stock.stat_high, stock.currency);
                     statLowEl.textContent = formatCurrency(stock.stat_low, stock.currency);
+                    statMktCapEl.textContent = stock.mkt_cap;
+                    statPeEl.textContent = stock.pe;
+                    statDivYieldEl.textContent = stock.div_yield;
+
                     buyHeader.textContent = `Buy ${activeTicker}`;
                     sellHeader.textContent = `Sell ${activeTicker}`;
                     sharesOwnedEl.textContent = stock.shares.toLocaleString();
@@ -435,7 +459,7 @@
                     const quantity = parseInt(sellQuantityInput.value);
                     const stock = stocks[activeTicker];
                     if (isNaN(quantity) || quantity <= 0) return showMessage('Invalid Quantity', 'Please enter a positive whole number.');
-                    if (quantity > stock.shares) return showMessage('Insufficient Shares', 'You do not own enough shares.');
+                    if (quantity > stock.shares) return showMessage('Insufficient Shares', 'You do not own enough shares to sell.');
                     const credit = quantity * stock.currentPrice;
                     stock.shares -= quantity;
                     if (stock.currency === 'USD') accounts.brokerage.cash_usd += credit;
